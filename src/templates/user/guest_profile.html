@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">{% endblock %}
+{% block content %}
+  <div class="profile-details mt-4">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <div class="">
+          <div class="image_container">
+            <img id="profile-img" src="{{ user.profile.image.url }}" alt="Avatar" width="200" height="200" class="rounded-circle">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-8 border rounded text-light">
+        <h3 class="capitalize">{{ user.username }}</h3>
+        <p id="user-cite">{{ user.profile.cite }}</p>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="bg-dark">
+<!-- Albums -->
+  <div class="albums-container mt-5 pt-3">
+    <div id="albums-tag">
+      <h2>Albums</h2>
+    </div>
+    {% if user.album_set.all %}
+      {% for album in user.album_set.all %}
+        {% include 'includes/album_card.html' %}
+      {% endfor %}
+    {% else %}
+      <p class="no-object-text text-dark">Sorry, no albums yet...</p>
+    {% endif %}
+  </div>
+
+  <hr class="bg-dark">
+
+
+<!-- Songs -->
+  <div class="songs-container pt-3">
+    <div id="songs-tag">
+      <h2>Songs</h2>
+    </div>
+    {% if user.song_set.all %}
+      <div class="px-3">
+        <table class="table table-sm table-striped table-dark mb-2">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Audio File</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for song in user.song_set.all %}
+                <tr>
+                  <td>{{ song.name }}</td>
+                  <td>{{ song.album.artist }}</td>
+                  <td><a href="{% url 'music:album-detail' song.album.id %}" class="text-light">{{ song.album.title }}</a></td>
+                  <td><a target="_blank" href="{{ song.music.url }}" class="btn btn-success btn-sm"><i class="fa fa-play"></i> Play</a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-object-text text-dark">Sorry, no songs yet...</p>
+    {% endif %}
+  </div>
+
+  <hr class="bg-dark">
+
+  <!-- Likees -->
+  <div class="songs-container pt-3">
+    <div id="songs-tag">
+      <h2>Liked Songs</h2>
+    </div>
+    {% if user.like_set.all %}
+      <div class="px-3">
+        <table class="table table-sm table-striped table-dark mb-2">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Audio File</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for like in user.like_set.all %}
+                <tr>
+                  <td>{{ like.song.name }}</td>
+                  <td>{{ like.song.album.artist }}</td>
+                  <td><a href="{% url 'music:album-detail' like.song.album.id %}" class="text-light">{{ like.song.album.title }}</a></td>
+                  <td><a target="_blank" href="{{ like.song.music.url }}" class="btn btn-success btn-sm"><i class="fa fa-play"></i> Play</a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-object-text text-dark">Sorry, no songs yet...</p>
+    {% endif %}
+  </div>
+{% endblock %}

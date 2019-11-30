@@ -1,0 +1,13 @@
+<div class="album-card">
+  <div class="album-card-body">
+    <div class="album-card-image-container">
+      <a href="{% url 'music:album-detail' album.id %}" class="album-card-image-link">
+        <img src="{{ album.image.url }}" alt="album-pic" class="album-card-img" width="190" height="140">
+      </a>
+    </div>
+    <div class="ml-2">
+      <h5 class="album-card-title">{{ album.title }}</h5>
+      <h6 class="album-card-artist">{{ album.artist }}</h6>
+    </div>
+  </div>
+</div>

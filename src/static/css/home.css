@@ -1,0 +1,59 @@
+.trendy-music {
+  height: 100vh;
+  background: black;
+}
+
+.albums-container, .songs-container {
+  /* border-top: orange 4px solid;
+  border-bottom: orange 4px solid;
+  border-right: black 5px solid;
+  border-left: black 5px solid; */
+  border: #ed512f 4px solid;
+}
+
+.no-object-text {
+  text-align: center;
+  padding: 80px 0;
+  margin: 0;
+  color: grey;
+}
+
+#albums-tag, #songs-tag {
+  background-color: #ed512f;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.album-card {
+  width: 200px;
+  height: 200px;
+  margin: auto 15px;
+  overflow: hidden;
+  border: 1px grey solid;
+  display: inline-block;
+  background: #f7f6f5;
+}
+
+.album-card-body {
+  width: 200px;
+}
+
+.album-card-image-container {
+  overflow: hidden;
+  padding: 5px;
+}
+
+.album-card-image-container:hover {
+  background: #ed512f;
+}
+
+.album-card-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.album-card-artist {
+  margin: 0;
+  font-size: 0.90rem;
+  color: #ed512f;
+}

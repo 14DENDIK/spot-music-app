@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">{% endblock %}
+{% block title %}Sardoor's - music web app{% endblock %}
+
+{% block content %}
+  {% block goBack %}{% endblock %}
+  <div class="albums-container mt-5 pt-3">
+    <div id="albums-tag">
+      <h2>Albums</h2>
+    </div>
+    {% if albums %}
+      {% for album in albums %}
+        <div class="album-card">
+          <div class="album-card-body">
+            <div class="album-card-image-container">
+              <a href="{% url 'music:album-detail' album.id %}" class="album-card-image-link">
+                <img src="{{ album.image.url }}" alt="album-pic" class="album-card-img" width="190" height="140">
+              </a>
+            </div>
+            <div class="ml-2">
+              <h5 class="album-card-title">{{ album.title }}</h5>
+              <h6 class="album-card-artist">{{ album.artist }}</h6>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-object-text">Sorry, no albums yet...</p>
+    {% endif %}
+  </div>
+  <hr>
+  <div class="songs-container pt-3">
+    <div id="songs-tag">
+      <h2>Songs</h2>
+    </div>
+    {% if songs %}
+      <div class="px-3">
+        <table class="table table-sm table-striped table-dark mb-2">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Audio File</th>
+              <th>Uploaded By</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for song in songs %}
+                <tr>
+                  <td>{{ song.name }}</td>
+                  <td>{{ song.album.artist }}</td>
+                  <td><a href="{% url 'music:album-detail' song.album.id %}" class="text-light">{{ song.album.title }}</a></td>
+                  <td><a target="_blank" href="{{ song.music.url }}" class="btn btn-success btn-sm"><i class="fa fa-play"></i> Play</a></td>
+                  <td><a href="{% url 'user:guest-profile' song.created_by %}" class="capitalize" style="color: #ed512f">{{ song.created_by }}</a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-object-text">Sorry, no songs yet...</p>
+    {% endif %}
+  </div>
+{% endblock %}

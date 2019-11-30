@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="row mt-3">
+    <div class="col-sm-3 d-flex">
+      <div class="card rounded-0" style="width: 200px">
+        <img class="card-img-top rounded-0" src="{{ album.image.url }}" alt="Card image" width="180" height="180">
+        <div class="card-body">
+          <h4 class="card-title">{{ album.title }}</h4>
+          <p class="card-text">{{ album.artist }}</p>
+          <p class="card-text"><small class="text-muted">Created By: <a href="{% url 'user:guest-profile' album.created_by %}">{{ album.created_by.username }}</a></small></p>
+        </div>
+      </div>
+      {% if user.username == album.created_by.username %}
+        <div class="album-editor">
+          <div class="btn-group-vertical">
+            <a href="{% url 'music:song-create' album.pk %}" class="btn btn-secondary rounded-0" data-toggle="tooltip" data-placement="right" title="Create Song"><i class="fa fa-music fa-2x"></i></a>
+            <a href="{% url 'music:album-delete' album.pk %}" class="btn btn-danger rounded-0" data-toggle="tooltip" data-placement="right" title="Delete Album"><i class="fa fa-trash fa-2x"></i></a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-sm-8">
+      {% if album.song_set.all %}
+        <table class="table table-sm table-hover table-dark" id="songs_table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Audio File</th>
+              {% if user.is_authenticated %}
+                <th>Favorite</th>
+                {% if user == album.created_by %}
+                  <th>Action</th>
+                {% endif %}
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for song in album.song_set.all %}
+              <tr id="song_row{{ song.id }}">
+                <td>{{ forloop.count }}{{ song.name }}</td>
+                <td><a target="_blank" href="{{ song.music.url }}" class="btn btn-success btn-sm"><i class="fa fa-play"></i>&nbsp; Play</a></td>
+                {% if user.is_authenticated %}
+                  <td>
+                    {% if song.is_liked %}
+                      <button type="button" onclick="likeSong({{ song.id }})" class="btn btn-warning fa fa-star" id="like_song{{ song.id }}"></button>
+                    {% else %}
+                      <button type="button" onclick="likeSong({{ song.id }})" class="btn btn-outline-warning fa fa-star" id="like_song{{ song.id }}"></button>
+                    {% endif %}
+                  </td>
+                  {% if user == album.created_by %}
+                    <td><button onclick="deleteSong({{ song.id }})" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>&nbsp; Delete</button></td>
+                  {% endif %}
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No songs uploaded for this album</p>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+
+    function deleteSong(id) {
+      var action = confirm('Are you sure you want to delete this song?');
+      if (action != false) {
+        $.ajax({
+          url: '{% url "music:delete-song" %}',
+          data: {
+            'songId': id,
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.deleted) {
+              raw = document.getElementById("song_row"+id);
+              raw.remove();
+            }
+          }
+        });
+      }
+    }
+
+
+    function likeSong(id) {
+      $.ajax({
+        url: '{% url "music:like-song" %}',
+        data: {
+          'songId': id,
+        },
+        dataType: 'json',
+        success: function(data) {
+          var fav_icon = document.getElementById("like_song"+id);
+          if(data.is_liked) {
+            fav_icon.className = 'btn btn-warning fa fa-star';
+          } else {
+            fav_icon.className = 'btn btn-outline-warning fa fa-star';
+          }
+        }
+      });
+    }
+
+  </script>
+{% endblock %}

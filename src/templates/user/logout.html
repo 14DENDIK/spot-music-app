@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="row text-center mt-4">
+    <div class="col-sm">
+      <h3>You are logged out</h3>
+      <h5>Hope to see you again</h5>
+      <p><img src="{% static 'images/sad-face.png' %}" alt="Saad!" width="250" height="250"></p>
+      <a href="{% url 'music:home' %}" class="btn btn-success"><- Back to Home</a>
+    </div>
+  </div>
+{% endblock %}

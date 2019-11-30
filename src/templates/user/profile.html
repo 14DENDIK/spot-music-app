@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">{% endblock %}
+{% block content %}
+  <div class="profile-details mt-4">
+    <div class="row">
+
+      <div class="col-sm-3">
+        <div class="">
+          <div class="image_container">
+            <img id="profile-img" src="{{ user.profile.image.url }}" alt="Avatar" width="200" height="200" class="rounded-circle" data-toggle="modal" data-target="#imageForm">
+            <div class="centered" id="centered">
+              <i class="fa fa-camera fa-2x" style="color: black" id="camera-btn"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-8 border rounded text-light">
+        <h3 class="capitalize">{{ user.username }}</h3>
+        <p id="user-cite">{{ user.profile.cite }}</p>
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group" style="display: inline-block">
+            <p class="mb-0">{{ c_form.cite }}</p>
+            <button type="submit" name="cite_update" class="btn btn-primary float-right">Post</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="bg-dark">
+<!-- Albums -->
+  <div class="albums-container mt-5 pt-3">
+    <div id="albums-tag">
+      <h2>Albums</h2>
+    </div>
+    {% if user.album_set.all %}
+      {% for album in user.album_set.all %}
+        {% include 'includes/album_card.html' %}
+      {% endfor %}
+    {% else %}
+      <p class="no-object-text text-dark">Sorry, no albums yet...</p>
+    {% endif %}
+  </div>
+
+  <hr class="bg-dark">
+
+
+<!-- Songs -->
+  <div class="songs-container pt-3">
+    <div id="songs-tag">
+      <h2>Songs</h2>
+    </div>
+    {% if user.song_set.all %}
+      <div class="px-3">
+        <table class="table table-sm table-striped table-dark mb-2">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Audio File</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for song in user.song_set.all %}
+                <tr>
+                  <td>{{ song.name }}</td>
+                  <td>{{ song.album.artist }}</td>
+                  <td><a href="{% url 'music:album-detail' song.album.id %}" class="text-light">{{ song.album.title }}</a></td>
+                  <td><a target="_blank" href="{{ song.music.url }}" class="btn btn-success btn-sm"><i class="fa fa-play"></i> Play</a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-object-text text-dark">Sorry, no songs yet...</p>
+    {% endif %}
+  </div>
+
+  <hr class="bg-dark">
+
+  <!-- Likees -->
+  <div class="songs-container pt-3">
+    <div id="songs-tag">
+      <h2>Liked Songs</h2>
+    </div>
+    {% if user.like_set.all %}
+      <div class="px-3">
+        <table class="table table-sm table-striped table-dark mb-2">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Audio File</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for like in user.like_set.all %}
+                <tr>
+                  <td>{{ like.song.name }}</td>
+                  <td>{{ like.song.album.artist }}</td>
+                  <td><a href="{% url 'music:album-detail' like.song.album.id %}" class="text-light">{{ like.song.album.title }}</a></td>
+                  <td><a target="_blank" href="{{ like.song.music.url }}" class="btn btn-success btn-sm"><i class="fa fa-play"></i> Play</a></td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-object-text text-dark">Sorry, no songs yet...</p>
+    {% endif %}
+  </div>
+
+<!-- Modal -->
+  <div class="modal fade" id="imageForm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Upload Avatar Image</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <form method="post" enctype='multipart/form-data'>
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="form-group">
+              {{ i_form.image.label_tag }}
+              {{ i_form.image }}
+            </div>
+            <small class="text-muted">Image should be of "png", "jpg", or "jpeg" format</small>
+            <br>
+            <small class="text-danger">Other formats will not be submitted!</small>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" name="image_update" class="btn btn-success">Upload</button>
+            <button type="button" data-dismiss="modal" class="btn btn-danger" name="button">Close</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  <script type="text/javascript">
+
+    $(document).ready(function() {
+      $("#camera-btn").css("display", "none");
+      $("#profile-img").hover(function() {
+        $("#camera-btn").css("display", "block");
+        $("#profile-img").css("opacity", "0.7");
+      }, function() {
+        $("#camera-btn").css("display", "none");
+        $("#profile-img").css("opacity", "1");
+      });
+    });
+
+  </script>
+{% endblock %}

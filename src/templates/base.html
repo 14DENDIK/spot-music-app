@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fa/css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/_navbar.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    {% block style %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    {% include 'includes/_navbar.html' %}
+    <div class="container">
+      {% include 'includes/error_messages.html' %}
+      {% block goBack %}<button type="button" onclick="goBack()" name="button" class="btn btn-info mt-3"><i class="fa fa-arrow-left"></i> Back</button>{% endblock %}
+      {% block content %}
+
+      {% endblock %}
+    </div>
+    {% include 'includes/_footer.html' %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/popper.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/_navbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    {% block javascript %}{% endblock %}
+  </body>
+</html>

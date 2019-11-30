@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form method="post" class="mt-5">
+    {% csrf_token %}
+    <fieldset class="form-group">
+      <legend class="mb-4 border-bottom">Update an Album</legend>
+      {% for field in form %}
+        {{ field.label_tag }}
+        <p>{{ field }}</p>
+      {% endfor %}
+    </fieldset>
+    <div class="form-group border-top">
+      <button type="submit" name="update" class="btn btn-primary mt-4">Update</button>
+    </div>
+  </form>
+{% endblock %}
